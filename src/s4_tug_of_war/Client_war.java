@@ -17,19 +17,13 @@ public class Client_war {
             System.out.println(in.readUTF()); //Nom del equip
 
             int i=0;
-            boolean fi = false;
-            while (!fi) {
+            while(true) {
                 System.out.println("client while "+i);
                 br.readLine();
                 out.writeInt(1);
                 out.flush();
                 i++;
-                if (in.readUTF().equals("fi")){
-                    fi = true;
-                }
             }
-            socket.close();
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

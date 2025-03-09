@@ -51,9 +51,6 @@ public class Server_war {
                     sendLastMessage(s_positive , "You Lost..");
                     gameOver = true;
                 }
-                sendEndMessage(s_positive);
-                sendEndMessage(s_negative);
-
             }
             // Esperar a que los threads terminen antes de cerrar el servidor
             t_positive.join();
@@ -82,18 +79,6 @@ public class Server_war {
             throw new RuntimeException(e);
         }
     }
-
-    public static void sendEndMessage (Socket socket){
-        DataOutputStream out;
-        try {
-            out = new DataOutputStream(socket.getOutputStream());
-            if (gameOver) out.writeUTF("fi");
-            if (!gameOver) out.writeUTF("not fi");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static class PositiveTeam implements Runnable {
         Socket socket;
         public PositiveTeam(Socket socket) {
