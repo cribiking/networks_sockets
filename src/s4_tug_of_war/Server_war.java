@@ -42,7 +42,7 @@ public class Server_war {
                 System.out.println("Valor shared: "+shared);
                 //Cal comprovar si la variable compartida ha arribat a 10
                 if (shared == 10){
-                    //Enviar per socket positiu que el seu equip ha guanyat
+                    //Métode per notificar als equips el resultat final, resultat llegit per 'ListenThread'
                     sendLastMessage(s_positive , "Positive Team Won!");
                     sendLastMessage(s_negative , "You Lost..");
                     gameOver = true;
@@ -52,11 +52,15 @@ public class Server_war {
                     gameOver = true;
                 }
             }
+            //Notificarem al 'ListenThread' que el joc ha finalitzat
+            sendEndMessage(s_negative);
+            sendEndMessage(s_positive);
+
             // Esperar a que los threads terminen antes de cerrar el servidor
             t_positive.join();
             t_negative.join();
 
-            //Si detectem que un equip ha guanyat sortim del bucle, tanquem conexions i avisem als jugadors
+            //Si detectem que un equip ha guanyat sortim del bucle
             s_positive.close();
             s_negative.close();
             serverSocket.close();
@@ -68,14 +72,25 @@ public class Server_war {
         }
     }
 
+    //Mètode utilitzat per notificar quin resultat final te cada equip, si ha guanyat o perdut.
     public static void sendLastMessage(Socket socket , String msg){
         try {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             out.writeUTF(msg);
             out.flush();
-            out.close();
         } catch (IOException e) {
             System.out.println("Error de sendMessage(): "+e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    //Mètode utilitzat per notificar que el joc ha acabat, i així modificar la variable 'end' del codi 'Client_war'.
+    public static void sendEndMessage (Socket socket){
+        DataOutputStream out;
+        try {
+            out = new DataOutputStream(socket.getOutputStream());
+            out.writeUTF("fi");
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -98,7 +113,6 @@ public class Server_war {
                     shared+=incr;
                     //Si el main ens indica que shared ha arribat a 10, s'acaba el joc.
                 }
-
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -125,6 +139,7 @@ public class Server_war {
                     shared-=incr;
                     //Si el main ens indica que shared ha arribat a 10, s'acaba el joc.
                 }
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
