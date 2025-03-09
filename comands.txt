@@ -1,0 +1,6 @@
+Compilació:
+javac -d out src/Client_Server_ToUpperCase_s2/Server.java
+Execució:
+java -cp out Client_Server_ToUpperCase_s2.Server_s2
+
+¡Modificar segons arxiu!
