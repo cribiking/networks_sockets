@@ -22,6 +22,7 @@ public class Client_war {
                 System.out.println("client while "+i);
                 br.readLine();
                 out.writeInt(1);
+                out.flush();
                 i++;
                 if (in.readUTF().equals("fi")){
                     fi = true;
